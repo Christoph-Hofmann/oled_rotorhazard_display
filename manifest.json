@@ -1,0 +1,15 @@
+{
+    "domain": "oled_rotorhazard_display",
+    "name": "OLED RotorHazard Display",
+    "description": "Displays voltage sensor data and race information on I2C OLED displays (SH1106/SSD1306)",
+    "author": "RotorHazard Community",
+    "version": "1.0.2",
+    "required_rhapi_version": "1.0",
+    "license": "MIT",
+    "dependencies": [
+        "luma.oled",
+        "pillow"
+    ],
+    "documentation_uri": "https://github.com/Christoph-Hofmann/oled_rotorhazard_display.git",
+    "info_uri": "https://github.com/Christoph-Hofmann/oled_rotorhazard_display.git"
+}
