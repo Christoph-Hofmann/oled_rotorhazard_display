@@ -1,6 +1,13 @@
-# OLED RotorHazard Display Plugin
+# OLED RotorHazard Display Plugin v1.0.3
 
 This RotorHazard plugin displays voltage information and race data from connected sensors on an I2C OLED display. It's perfect for monitoring battery voltage, race standings, and lap times during races.
+
+## Latest Changes (v1.0.3)
+
+- **🔋 Real-time Voltage Updates**: Fixed voltage data always showing the same values - now updates in real-time
+- **⏱️ Extended Burn-in Protection**: Increased from 60 seconds to 10 minutes (600 seconds) before screen cycling
+- **🔧 Enhanced Sensor Support**: Improved compatibility with INA219 and other voltage sensors
+- **📊 Better Debugging**: Added comprehensive logging for sensor operations
 
 ## Features
 

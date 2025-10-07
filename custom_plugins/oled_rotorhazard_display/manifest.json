@@ -3,7 +3,7 @@
     "name": "OLED RotorHazard Display",
     "description": "Displays voltage sensor data and race information on I2C OLED displays (SH1106/SSD1306)",
     "author": "Christoph Hofmann",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "required_rhapi_version": "1.0",
     "license": "MIT",
     "dependencies": [
