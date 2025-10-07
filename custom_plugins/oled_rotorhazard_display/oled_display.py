@@ -126,7 +126,7 @@ class OLEDDisplay:
 
             # Check if burn-in protection should be active
             voltage_monitor_duration = time.time() - self.voltage_monitor_start_time
-            self.burn_in_protection_active = voltage_monitor_duration > 60  # 60 seconds
+            self.burn_in_protection_active = voltage_monitor_duration > 600  # 600 seconds
             
             # Get sensor data from RotorHazard
             voltage_data = self.get_voltage_data()
@@ -150,26 +150,50 @@ class OLEDDisplay:
             if not hasattr(self.rhapi, 'sensors') or not self.rhapi.sensors:
                 logger.debug("No sensor system available")
                 return None
-                
+
+            # Force update of all environmental sensor data
+            try:
+                if hasattr(self.rhapi.sensors, 'update_environmental_data'):
+                    self.rhapi.sensors.update_environmental_data()
+                    logger.debug("Updated environmental sensor data")
+            except Exception as env_e:
+                logger.debug(f"Could not update environmental data: {env_e}")
+
             sensors_dict = self.rhapi.sensors.sensors_dict
             if not sensors_dict:
                 logger.debug("No sensors found in sensors_dict")
                 return None
-            
+
             voltage_data = {}
             for sensor_name, sensor_obj in sensors_dict.items():
                 try:
                     if hasattr(sensor_obj, 'getReadings'):
+                        # Try to force individual sensor update if method exists
+                        if hasattr(sensor_obj, 'update'):
+                            try:
+                                sensor_obj.update()
+                                logger.debug(f"Updated sensor {sensor_name}")
+                            except Exception as update_e:
+                                logger.debug(f"Could not update sensor {sensor_name}: {update_e}")
+                        elif hasattr(sensor_obj, 'readData'):
+                            try:
+                                sensor_obj.readData()
+                                logger.debug(f"Read data for sensor {sensor_name}")
+                            except Exception as read_e:
+                                logger.debug(f"Could not read data for sensor {sensor_name}: {read_e}")
+
                         readings = sensor_obj.getReadings()
                         if readings and any('voltage' in str(key).lower() for key in readings.keys()):
                             voltage_data[sensor_name] = readings
                             logger.debug(f"Found voltage data for sensor {sensor_name}: {readings}")
+                        else:
+                            logger.debug(f"Sensor {sensor_name} readings (no voltage): {readings}")
                 except Exception as e:
                     logger.debug(f"Error reading sensor {sensor_name}: {e}")
                     continue
-            
+
             return voltage_data if voltage_data else None
-            
+
         except Exception as e:
             logger.error(f"Error getting voltage data: {e}")
             return None
